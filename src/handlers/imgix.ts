@@ -83,6 +83,7 @@ const shouldSignUri = (
         !staticSignatureLRU.has(signature) &&
           staticSignatureLRU.set(signature, signedExternalImageUri);
         // Return the signed image.
+        console.log('shouldSignUri', signedExternalImageUri, '(signed)');
         return signedExternalImageUri;
       }
       throw new Error(
@@ -94,6 +95,7 @@ const shouldSignUri = (
     // If something goes wrong, it is not safe to assume the image is valid.
     return undefined;
   }
+  console.log('shouldSignUri', externalImageUri, '(noop)');
   return externalImageUri;
 };
 
@@ -128,26 +130,34 @@ export const maybeSignUri = (
     staticSignatureLRU.has(signature as string) &&
     !skipCaching
   ) {
-    return staticSignatureLRU.get(signature);
+    const result = staticSignatureLRU.get(signature);
+    console.log('maybeSignUri', result, '(signed #1)');
+    return result;
   }
   if (
     typeof externalImageUri === 'string' &&
     !!externalImageUri.length &&
     isPossibleToSignUri(externalImageUri)
   ) {
-    return shouldSignUri(externalImageUri, options);
+    const result = shouldSignUri(externalImageUri, options);
+    console.log('maybeSignUri', result, '(signed #2)');
+    return result;
   }
+  console.log('maybeSignUri', externalImageUri, '(noop)');
   return externalImageUri;
 };
 
 export const maybeSignSource = (source: Source, options?: {}): Source => {
   if (!!source && typeof source === 'object') {
     const { uri: externalImageUri, ...extras } = source;
-    return {
+    const result = {
       ...extras,
       uri: maybeSignUri(externalImageUri, options),
     };
+    console.log('maybeSignSource', result, '(signed)');
+    return result;
   }
+  console.log('maybeSignSource', source, '(noop)');
   return source;
 };
 
