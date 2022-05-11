@@ -2,7 +2,7 @@ import React from 'react';
 import Animated, { SpringUtils } from 'react-native-reanimated';
 import { bin, useSpringTransition } from 'react-native-redash/src/v1';
 import { useMemoOne } from 'use-memo-one';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../theme/ThemeContext';
 import { Row } from '../layout';
 import styled from '@rainbow-me/styled-components';
 import { borders, position } from '@rainbow-me/styles';
